@@ -3,7 +3,7 @@
 var OK=['xray.tasrbharatnext.com'];var hn=location.hostname;
 if(!(hn==='localhost'||hn==='127.0.0.1'||hn===''||/\.local$/.test(hn))&&OK.indexOf(hn)===-1){
   document.documentElement.innerHTML='<body style="margin:0;height:100vh;display:grid;place-items:center;background:#0b0d11;color:#e5e7eb;font:16px system-ui;text-align:center;padding:24px"><div><div style="font-size:34px">X-RAY JVS</div><div style="color:#9aa4b2;margin-top:8px">This application is licensed to run on its official website only.</div></div></body>';throw 'd';}
-var SB={url:"https://kuououeyooqrosnsgvpf.supabase.co",key:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1b3VvdWV5b29xcm9zbnNndnBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNTUzNzEsImV4cCI6MjEwODgzMTM3MX0.Bihkcwa87w_bVpQ303i8rWrm7SpRiCawBZmoJKtoAX0"};
+var SB={url:"https://xray-api.smplprojecttrack.workers.dev",key:"xray"};
 var $=function(i){return document.getElementById(i);};
 var ls={get:function(k,d){try{var v=localStorage.getItem('xray_'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set:function(k,v){try{localStorage.setItem('xray_'+k,JSON.stringify(v));}catch(e){}}};
 function ss(k,v){try{if(v===undefined)return JSON.parse(sessionStorage.getItem('xray_'+k)||'null');if(v===null)sessionStorage.removeItem('xray_'+k);else sessionStorage.setItem('xray_'+k,JSON.stringify(v));}catch(e){return null;}}
