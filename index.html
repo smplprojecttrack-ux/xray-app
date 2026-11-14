@@ -41,6 +41,23 @@ function onLogin(e){e.preventDefault();if(busy)return;msg('');
 }
 
 function b64(s){var b=atob(s),n=b.length,a=new Uint8Array(n);for(var i=0;i<n;i++)a[i]=b.charCodeAt(i);return a;}
+// Swap in the decrypted app WITHOUT document.write (which makes external library
+// <script src> parser-blocking and droppable on slow networks). We replace the
+// document tree, then re-run every script in original order: external ones load
+// and we wait for onload before the next, so the inline app code still runs last.
+function runApp(html){
+  var doc=new DOMParser().parseFromString(html,'text/html');
+  var root=document.importNode(doc.documentElement,true);
+  document.replaceChild(root,document.documentElement);
+  var scripts=[].slice.call(document.getElementsByTagName('script'));
+  (function next(i){
+    if(i>=scripts.length)return;
+    var old=scripts[i],s=document.createElement('script');
+    for(var j=0;j<old.attributes.length;j++){var a=old.attributes[j];s.setAttribute(a.name,a.value);}
+    if(old.src){s.onload=s.onerror=function(){next(i+1);};old.parentNode.replaceChild(s,old);}
+    else{s.text=old.textContent;old.parentNode.replaceChild(s,old);next(i+1);}
+  })(0);
+}
 function unlock(){
   $('lgMsg').textContent='';$('lgBox').style.opacity='.5';
   var o=$('lgOpen');if(o)o.style.display='flex';
@@ -54,7 +71,7 @@ function unlock(){
     });
   }).then(function(buf){
     var appHtml=new TextDecoder().decode(new Uint8Array(buf));
-    document.open();document.write(appHtml);document.close();
+    runApp(appHtml);
   }).catch(function(){
     $('lgBox').style.opacity='';var o2=$('lgOpen');if(o2)o2.style.display='none';
     busy=false;$('lgBtn').disabled=false;msg('Could not open the app. Please sign in again.');
